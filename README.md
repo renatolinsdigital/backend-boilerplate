@@ -1,6 +1,6 @@
 # BackEnd Boilerplate
 
-A **NestJS** back-end application with **Prisma** ORM integration for PostgreSQL database management. Includes user management and basic authentication.
+A **Node.js + NestJS** back-end application with **Prisma** as ORM for PostgreSQL. Includes user management and basic authentication.
 
 ![Print](print/swagger_print.png)
 
@@ -16,6 +16,23 @@ A **NestJS** back-end application with **Prisma** ORM integration for PostgreSQL
 ## Running the project
 
 To have this project up and running on your machine, check the **[Setup Guide](doc/setup.md)**, then access the API at `http://localhost:3000`
+
+## Features
+
+- ✅ TypeScript & NestJS modular architecture
+- ✅ Prisma ORM with PostgreSQL
+- ✅ JWT authentication with configurable expiration
+- ✅ User management (create, retrieve, delete)
+- ✅ Paginated user listing
+- ✅ Password security (bcrypt + complexity validation)
+- ✅ Centralized input validation utilities
+- ✅ Environment variable validation with Zod
+- ✅ Global exception filters
+- ✅ Health check endpoint with database connectivity
+- ✅ Unit testing with Jest
+- ✅ Production-ready logging with Winston (daily rotation, multiple levels)
+- ✅ Interactive API documentation with Swagger/OpenAPI
+- ✅ Code quality with ESLint + Prettier + Git hooks
 
 ## Development
 
@@ -58,20 +75,3 @@ npm run prisma:migrate  # Run database migrations
 - **[Code Quality](doc/code_quality.md)** - Best practices, naming conventions, linting, and git hooks
 - **[System Modules](doc/modules.md)** - Application modules structure
 - **[Extending the Project](doc/extending.md)** - Recommendations for adding features
-
-## Features
-
-- ✅ TypeScript & NestJS modular architecture
-- ✅ Prisma ORM with PostgreSQL
-- ✅ JWT authentication with configurable expiration
-- ✅ User management (create, retrieve, delete)
-- ✅ Paginated user listing
-- ✅ Password security (bcrypt + complexity validation)
-- ✅ Centralized input validation utilities
-- ✅ Environment variable validation with Zod
-- ✅ Global exception filters
-- ✅ Health check endpoint with database connectivity
-- ✅ Unit testing with Jest
-- ✅ Production-ready logging with Winston (daily rotation, multiple levels)
-- ✅ Interactive API documentation with Swagger/OpenAPI
-- ✅ Code quality with ESLint + Prettier + Git hooks
