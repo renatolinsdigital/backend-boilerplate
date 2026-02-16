@@ -352,6 +352,140 @@ This ensures configuration errors are caught early, preventing runtime failures.
 
 ---
 
+## CORS (Cross-Origin Resource Sharing)
+
+### Overview
+
+CORS controls which domains can access your API from browsers. Configure allowed origins via environment variable; other settings are hardcoded in [main.ts](../src/main.ts).
+
+### Configuration
+
+#### Environment Variable
+
+```env
+CORS_ORIGINS="http://localhost:3000,http://localhost:3001"
+```
+
+- Add to `.env` file
+- Comma-separated list of allowed origins
+- Use `*` for all origins (development/public APIs only)
+
+#### Hardcoded Settings
+
+| Setting            | Value                                    | Description                              |
+| ------------------ | ---------------------------------------- | ---------------------------------------- |
+| **credentials**    | `true`                                   | Allows cookies and Authorization headers |
+| **methods**        | `GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS` | Allowed HTTP methods                     |
+| **allowedHeaders** | `Content-Type,Accept,Authorization`      | Allowed request headers                  |
+| **exposedHeaders** | `X-Total-Count`                          | Response headers visible to client       |
+| **maxAge**         | `3600` (1 hour)                          | Preflight cache duration                 |
+
+To modify: Edit values in [main.ts](../src/main.ts)
+
+### Environment Examples
+
+**Development:**
+
+```env
+CORS_ORIGINS="http://localhost:3000,http://localhost:3001,http://localhost:5173"
+```
+
+**Production:**
+
+```env
+CORS_ORIGINS="https://myapp.com,https://www.myapp.com"
+```
+
+**Public API:**
+
+```env
+CORS_ORIGINS="*"
+```
+
+⚠️ **Warning**: Cannot use `*` with `credentials: true`. Either specify origins or set `credentials: false` in [main.ts](../src/main.ts).
+
+### Common Issues
+
+#### "Origin not allowed by CORS policy"
+
+**Fix:**
+
+- Add origin to `CORS_ORIGINS` in `.env`
+- Include exact protocol and port: `http://localhost:3000`
+- Restart server after changing `.env`
+
+#### "Credentials flag is true, but Access-Control-Allow-Origin is \*"
+
+**Fix:**
+
+- Use specific origins instead of `*`
+- OR set `credentials: false` in [main.ts](../src/main.ts)
+
+#### "Method not allowed"
+
+**Fix:**
+
+- Verify method is in: `GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS`
+- Update `methods` in [main.ts](../src/main.ts) if needed
+
+#### "Header not allowed"
+
+**Fix:**
+
+- Verify header is in: `Content-Type,Accept,Authorization`
+- Add to `allowedHeaders` in [main.ts](../src/main.ts) if needed
+
+#### CORS works in Postman but not browser
+
+**Explanation:** CORS is browser-enforced. Postman/curl don't check CORS. Test in actual browsers.
+
+### Testing CORS
+
+**Browser Console:**
+
+```javascript
+fetch('http://localhost:3000/api/users', {
+  method: 'GET',
+  credentials: 'include',
+  headers: { Authorization: 'Bearer <token>' },
+})
+  .then((r) => r.json())
+  .then((data) => console.log(data))
+  .catch((err) => console.error(err));
+```
+
+**cURL (Preflight Test):**
+
+```bash
+curl -H "Origin: http://localhost:3000" \
+     -H "Access-Control-Request-Method: GET" \
+     -H "Access-Control-Request-Headers: Content-Type" \
+     -X OPTIONS -v \
+     http://localhost:3000/api/users
+```
+
+### CORS Best Practices
+
+**Production checklist:**
+
+- ✓ Always use HTTPS
+- ✓ Never use `*` in production (except public APIs)
+- ✓ List specific origins only
+- ✓ Include www and non-www versions if needed
+- ✓ Monitor CORS errors in logs
+
+**To modify settings:**
+
+- Origins: Update `CORS_ORIGINS` in `.env`
+- Methods/Headers/Credentials: Edit [main.ts](../src/main.ts)
+
+**Resources:**
+
+- [MDN - CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+- [NestJS - CORS](https://docs.nestjs.com/security/cors)
+
+---
+
 ## Security Best Practices
 
 ### Implemented
@@ -367,6 +501,7 @@ This ensures configuration errors are caught early, preventing runtime failures.
 ✅ **Environment Variables** - Sensitive config externalized
 ✅ **Configuration Validation** - Joi schema validation at startup
 ✅ **Type Safety** - TypeScript throughout
+✅ **CORS** - Configurable cross-origin resource sharing
 
 ### Development vs Production
 
@@ -383,7 +518,6 @@ This ensures configuration errors are caught early, preventing runtime failures.
 - HTTPS enforcement
 - Rate limiting enabled
 - Helmet.js security headers
-- CORS properly configured
 - Database user with minimal permissions
 - Regular security audits
 - Monitoring and alerting

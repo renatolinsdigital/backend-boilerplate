@@ -1,4 +1,4 @@
-# BackEnd Boilerplate - Implemented Features
+# Technical Implementations
 
 ## Core Stack
 
@@ -9,21 +9,15 @@
 
 ## Authentication & Security
 
-- JWT-based authentication (@nestjs/jwt 11.0.2)
-  - 7-day token expiration
-  - AuthGuard protecting sensitive endpoints
+- JWT-based authentication (@nestjs/jwt 11.0.2) with 7-day token expiration
+- AuthGuard protecting sensitive endpoints
 - Password security with bcryptjs (10 salt rounds)
 - Password complexity: 8+ chars, uppercase, lowercase, number
 - Role system: ADMIN, STUDENT, TEACHER, STAFF, GUEST (enum in database)
-
-## API Endpoints
-
-- `GET /` - Health check (uptime, database status, version)
-- `POST /auth/login` - User authentication
-- `POST /users/register` - User registration (public)
-- `GET /users` - List users with pagination (protected)
-- `GET /users/:id` - Get user by ID (protected)
-- `DELETE /users/:id` - Delete user (protected)
+- CORS (Cross-Origin Resource Sharing) - Controls which domains can access the API from browsers
+- Environment-based configuration
+- Custom origin validation with whitelist
+- Support for credentials (cookies, JWT tokens)
 
 ## API Documentation
 
@@ -54,6 +48,7 @@
   - `JWT_EXPIRES_IN` (optional, default "7d")
   - `NODE_ENV` (development/production/test)
   - `LOG_LEVEL` (optional, controlled by NODE_ENV)
+  - `CORS_ORIGINS` (optional, comma-separated list of allowed origins)
 - ConfigService for type-safe environment access
 - Fail-fast on invalid configuration
 

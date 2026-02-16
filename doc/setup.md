@@ -49,6 +49,34 @@
    - Open `http://localhost:3000` in your browser
    - The root endpoint will show API information and available endpoints
 
+## Environment Variables
+
+Create a `.env` file in the project root with the following variables:
+
+```env
+# Database connection
+DATABASE_URL="postgresql://postgres:yourpassword@localhost:5432/boilerplate_db?schema=public"
+
+# JWT configuration
+JWT_SECRET="your-super-secret-jwt-key-change-this-in-production"
+JWT_EXPIRES_IN="7d"
+
+# Application environment
+NODE_ENV="development"
+
+# CORS configuration
+# Comma-separated list of allowed origins. Use "*" to allow all origins (NOT recommended for production)
+CORS_ORIGINS="http://localhost:3000,http://localhost:3001"
+```
+
+**Important:**
+
+- Replace `yourpassword` with your PostgreSQL password
+- Change `JWT_SECRET` in production to a strong, random value (at least 32 characters)
+- Update `CORS_ORIGINS` with your frontend application URLs
+
+For detailed CORS configuration, see [Security Documentation](security.md#cors-cross-origin-resource-sharing).
+
 ## Available Scripts
 
 - `npm run dev` - Start development server with hot reload

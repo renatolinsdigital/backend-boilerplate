@@ -17,11 +17,12 @@ A **Node.js + NestJS** back-end application with **Prisma** as ORM for **Postgre
 
 To have this project up and running on your machine, check the **[Setup Guide](doc/setup.md)**, then access the API at `http://localhost:3000`
 
-## Features
+## Technical Implementations
 
 - ✅ TypeScript & NestJS modular architecture
 - ✅ Prisma ORM with PostgreSQL
 - ✅ JWT authentication with configurable expiration
+- ✅ CORS configuration for cross-origin access control
 - ✅ User management (create, retrieve, delete)
 - ✅ Paginated user listing
 - ✅ Password security (bcrypt + complexity validation)
@@ -66,11 +67,11 @@ npm run prisma:migrate  # Run database migrations
 ## Documentation
 
 - **[Setup & Getting Started](doc/setup.md)** - Installation and configuration guide
-- **[Implemented Features](doc/implemented_features.md)** - Complete list of implemented features
+- **[Technical Implementations](doc/technical_implementations.md)** - Complete list of implemented features
 - **[API Documentation](http://localhost:3000/swagger)** - Interactive Swagger UI (run `npm run dev` first)
 - **[Testing](doc/testing.md)** - Unit testing guide and test coverage
 - **[Logging](doc/logging.md)** - Winston logging system with daily rotation
-- **[Security](doc/security.md)** - Authentication, password hashing, and security practices
+- **[Security](doc/security.md)** - Authentication, password hashing, CORS, and security practices
 - **[Validation](doc/validation.md)** - Input validation utilities and rules
 - **[Code Quality](doc/code_quality.md)** - Best practices, naming conventions, linting, and git hooks
 - **[System Modules](doc/modules.md)** - Application modules structure
