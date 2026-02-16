@@ -2,7 +2,7 @@
 
 A **NestJS** back-end application with **Prisma** ORM integration for PostgreSQL database management. Includes user management and basic authentication.
 
-![Print](print/print.png)
+![Print](print/swagger_print.png)
 
 ## Tech Stack
 
