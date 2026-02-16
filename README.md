@@ -4,11 +4,14 @@ A **NestJS** back-end application with **Prisma** ORM integration for PostgreSQL
 
 ![Print](print/print.png)
 
-## Prerequisites
+## Tech Stack
 
-- Node.js ≥ 18
-- npm ≥ 10
-- PostgreSQL 18 running locally
+- **NestJS** - Progressive Node.js framework
+- **Prisma** - Next-generation ORM
+- **PostgreSQL** - Relational database
+- **Winston** - Logging with daily rotation
+- **bcryptjs** - Password hashing
+- **TypeScript** - Type-safe JavaScript
 
 ## Running the project
 
@@ -22,6 +25,7 @@ To have this project up and running on your machine, check the **[Setup Guide](d
 # Development
 npm run dev          # Start development server with hot reload
 npm run free         # Kill any process using port 3000
+npm run clean        # Remove build artifacts and cache files (uses .gitignore as reference)
 
 # Building
 npm run build        # Compile TypeScript to JavaScript
@@ -42,15 +46,6 @@ npm run prisma:generate # Generate Prisma Client
 npm run prisma:migrate  # Run database migrations
 ```
 
-### Code Quality & Git Hooks
-
-This project uses **ESLint** and **Prettier** for code quality, with **Husky** and **lint-staged** for automatic linting on commit:
-
-- **Pre-commit hook**: Automatically runs ESLint and Prettier on staged files before each commit
-- Code is formatted according to `.prettierrc` configuration
-- TypeScript linting rules are defined in `eslint.config.js`
-- All commits are guaranteed to pass linting checks
-
 ## Documentation
 
 - **[Setup & Getting Started](doc/setup.md)** - Installation and configuration guide
@@ -66,27 +61,17 @@ This project uses **ESLint** and **Prettier** for code quality, with **Husky** a
 
 ## Features
 
+- ✅ TypeScript & NestJS modular architecture
+- ✅ Prisma ORM with PostgreSQL
 - ✅ JWT authentication with configurable expiration
 - ✅ User management (create, retrieve, delete)
 - ✅ Paginated user listing
 - ✅ Password security (bcrypt + complexity validation)
-- ✅ Role-based system (ADMIN, STUDENT, TEACHER, STAFF, GUEST)
 - ✅ Centralized input validation utilities
 - ✅ Environment variable validation with Zod
 - ✅ Global exception filters
 - ✅ Health check endpoint with database connectivity
-- ✅ Unit testing with Jest (41 tests, 100% pass rate)
+- ✅ Unit testing with Jest
 - ✅ Production-ready logging with Winston (daily rotation, multiple levels)
 - ✅ Interactive API documentation with Swagger/OpenAPI
 - ✅ Code quality with ESLint + Prettier + Git hooks
-- ✅ Prisma ORM with PostgreSQL
-- ✅ TypeScript & NestJS modular architecture
-
-## Tech Stack
-
-- **NestJS** - Progressive Node.js framework
-- **Prisma** - Next-generation ORM
-- **PostgreSQL** - Relational database
-- **Winston** - Logging with daily rotation
-- **bcryptjs** - Password hashing
-- **TypeScript** - Type-safe JavaScript
