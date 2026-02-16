@@ -1,6 +1,6 @@
 # BackEnd Boilerplate
 
-A **Node.js + NestJS** back-end application with **Prisma** as ORM for PostgreSQL. Includes user management and basic authentication.
+A **Node.js + NestJS** back-end application with **Prisma** as ORM for **PostgreSQL**. Includes user management and basic authentication.
 
 ![Print](print/swagger_print.png)
 
