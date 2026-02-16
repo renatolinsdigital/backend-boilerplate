@@ -2,22 +2,17 @@
 
 A **NestJS** back-end application with **Prisma** ORM integration for PostgreSQL database management. Includes user management and basic authentication.
 
+![Print](print/print.png)
+
 ## Prerequisites
 
 - Node.js ≥ 18
 - npm ≥ 10
 - PostgreSQL 18 running locally
 
-## Quick Start
+## Running the project
 
-```bash
-npm install
-npm run prisma:generate
-npm run prisma:migrate
-npm run dev
-```
-
-Access the API at `http://localhost:3000`
+To have this project up and running on your machine, check the **[Setup Guide](doc/setup.md)**, then access the API at `http://localhost:3000`
 
 ## Development
 
