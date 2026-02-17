@@ -30,8 +30,7 @@ To have this project up and running on your machine, check the **[Setup Guide](d
 
 ## Technical Implementations
 
-- ✅ TypeScript & NestJS modular architecture
-- ✅ Prisma ORM with PostgreSQL
+- ✅ Modular and scalable architecture
 - ✅ JWT authentication with configurable expiration
 - ✅ CORS configuration for cross-origin access control
 - ✅ User management (create, retrieve, delete)
