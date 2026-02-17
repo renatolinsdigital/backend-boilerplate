@@ -68,33 +68,17 @@ npm run clean            # Remove build artifacts
 npm run free             # Kill process on port 3000
 ```
 
-## First Steps
+## Using Swagger
 
-**Create a user:**
+Access `http://localhost:3000/swagger` for interactive API testing:
 
-```bash
-POST http://localhost:3000/users/register
-{
-  "email": "user@example.com",
-  "password": "Password123",
-  "name": "John Doe"
-}
-```
+1. **Register a user** via `POST /users/register`
+2. **Login** via `POST /auth/login` - copy the `access_token` from response
+3. **Click the lock icon** 🔒 (Authorize button) at the top right
+4. **Paste the token** and click "Authorize"
+5. **Make authenticated requests** - all protected endpoints will now include your token
 
-**Login:**
-
-```bash
-POST http://localhost:3000/auth/login
-{
-  "email": "user@example.com",
-  "password": "Password123"
-}
-```
-
-**Access API:**
-
-- Root: `http://localhost:3000`
-- Swagger: `http://localhost:3000/swagger`
+All API endpoints can be tested directly in Swagger without external tools.
 
 ## Troubleshooting
 
