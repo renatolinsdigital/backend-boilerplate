@@ -64,9 +64,9 @@ export class AuthController {
 
       return result;
     } catch (error) {
-      // Handle Zod validation errors
+      // Handle Zod validation errors - use generic message for security
       if (error instanceof ZodError) {
-        throw new BadRequestException(error.issues[0]?.message || 'Validation failed');
+        throw new BadRequestException('Invalid request format. Please check your input');
       }
 
       // Re-throw known exceptions

@@ -1,8 +1,9 @@
 import { NotFoundException } from '@nestjs/common';
 
 export class UserNotFoundException extends NotFoundException {
-  constructor(userId?: number | string) {
-    super(`User${userId ? ` with ID ${userId}` : ''} not found`);
+  constructor(_userId?: number | string) {
+    // Use generic message to prevent information disclosure about user IDs
+    super('Resource not found');
     this.name = 'UserNotFoundException';
   }
 }

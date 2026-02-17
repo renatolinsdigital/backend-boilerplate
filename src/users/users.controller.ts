@@ -75,14 +75,14 @@ export class UsersController {
       const { password: _password, ...userWithoutPassword } = result;
       return userWithoutPassword;
     } catch (error) {
-      // Handle Zod validation errors
+      // Handle Zod validation errors - use generic message for security
       if (error instanceof ZodError) {
-        throw new BadRequestException(error.issues[0]?.message || 'Validation failed');
+        throw new BadRequestException('Invalid request format. Please check your input');
       }
 
-      // Handle duplicate email error
+      // Handle duplicate email error - use generic message to prevent user enumeration
       if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
-        throw new BadRequestException('Email already in use');
+        throw new BadRequestException('Registration failed. Please try again later');
       }
 
       // Re-throw known exceptions
@@ -133,9 +133,9 @@ export class UsersController {
 
       return await this.usersService.findbyPage(pageNum, limitNum);
     } catch (error) {
-      // Handle Zod validation errors
+      // Handle Zod validation errors - use generic message for security
       if (error instanceof ZodError) {
-        throw new BadRequestException(error.issues[0]?.message || 'Invalid pagination parameters');
+        throw new BadRequestException('Invalid request format. Please check your input');
       }
 
       // Re-throw known exceptions
@@ -171,15 +171,15 @@ export class UsersController {
       const user = await this.usersService.findOneById(userId);
 
       if (!user) {
-        throw new UserNotFoundException(id);
+        throw new UserNotFoundException(userId);
       }
 
       const { password: _password, ...result } = user;
       return result;
     } catch (error) {
-      // Handle Zod validation errors
+      // Handle Zod validation errors - use generic message for security
       if (error instanceof ZodError) {
-        throw new BadRequestException(error.issues[0]?.message || 'Invalid user ID');
+        throw new BadRequestException('Invalid request format. Please check your input');
       }
 
       // Re-throw known exceptions
@@ -218,9 +218,9 @@ export class UsersController {
       await this.usersService.delete(userId);
       return { message: 'User deleted successfully' };
     } catch (error) {
-      // Handle Zod validation errors
+      // Handle Zod validation errors - use generic message for security
       if (error instanceof ZodError) {
-        throw new BadRequestException(error.issues[0]?.message || 'Invalid user ID');
+        throw new BadRequestException('Invalid request format. Please check your input');
       }
 
       // Re-throw known exceptions

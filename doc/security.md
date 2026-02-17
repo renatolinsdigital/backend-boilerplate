@@ -132,12 +132,34 @@ CORS_ORIGINS="*"
 - All exceptions logged for monitoring
 - Generic 500 errors for internal failures
 
+**Generic Error Messages:**
+
+The application uses intentionally generic error messages to prevent information disclosure vulnerabilities:
+
+- **Not Found Errors**: All 404 responses return "Resource not found" instead of exposing which entities exist
+- **User Enumeration Prevention**: Registration failure doesn't distinguish between "email already exists" vs other errors
+- **Validation Errors**: Zod validation messages are generalized to "Invalid request format. Please check your input" instead of exposing specific validation rules
+- **Authentication Errors**: Login responses don't differentiate between non-existent users and incorrect passwords
+
+**Why Generic Messages Matter:**
+
+- Prevents attackers from enumerating valid users/resources
+- Hides application structure and validation rules
+- Reduces information available for attack research
+- Complies with security best practices (OWASP)
+
+**Detailed Error Logging:**
+
+- All errors are fully logged server-side with timestamps and stack traces
+- Developers can debug using logs without exposing details to clients
+- Production logs should be monitored for security-relevant events
+
 **Format:**
 
 ```json
 {
   "statusCode": 400,
-  "message": "Error description",
+  "message": "Invalid request format. Please check your input",
   "error": "Bad Request",
   "timestamp": "2026-02-15T12:00:00.000Z",
   "path": "/api/endpoint"
@@ -158,6 +180,9 @@ CORS_ORIGINS="*"
 - ✅ Environment variable validation
 - ✅ Type safety (TypeScript)
 - ✅ CORS configuration
+- ✅ Generic error messages (prevents information disclosure)
+- ✅ User enumeration prevention (registration)
+- ✅ Consistent error response format
 
 **Production Recommendations:**
 
