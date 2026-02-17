@@ -4,14 +4,25 @@ A **Node.js + NestJS** back-end application with **Prisma** as ORM for **Postgre
 
 ![Print](print/swagger_print.png)
 
-## Tech Stack
+## Main Stack
 
-- **NestJS** - Progressive Node.js framework
-- **Prisma** - Next-generation ORM
-- **PostgreSQL** - Relational database
-- **Winston** - Logging with daily rotation
-- **bcryptjs** - Password hashing
 - **TypeScript** - Type-safe JavaScript
+- **Node.js** - Runtime environment
+- **NestJS** - Progressive framework with dependency injection
+- **PostgreSQL** - Relational database
+- **Prisma** - Type-safe ORM with migrations
+
+## Tools & Libraries
+
+- **JWT** - Token-based authentication
+- **bcryptjs** - Password hashing
+- **Zod** - Schema validation for data and environment variables
+- **Winston** - Structured logging
+- **Swagger/OpenAPI** - Interactive API documentation
+- **Jest** - Unit testing framework
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
+- **Husky** - Git hooks for pre-commit checks
 
 ## Running the project
 
@@ -26,7 +37,7 @@ To have this project up and running on your machine, check the **[Setup Guide](d
 - ✅ User management (create, retrieve, delete)
 - ✅ Paginated user listing
 - ✅ Password security (bcrypt + complexity validation)
-- ✅ Data and Environment variables validation with Zod schemas
+- ✅ Data and Environment variables validation with Zod
 - ✅ Global exception filters
 - ✅ Health check endpoint with database connectivity
 - ✅ Unit testing with Jest
