@@ -1,32 +1,32 @@
 /**
  * Pagination validation utility functions
+ * Using Zod for type-safe schema validation
  */
 
+import { ZodError } from 'zod';
 import { ValidationResult } from './models';
+import { paginationSchema } from '../../users/users.schemas';
 
 /**
- * Validates pagination parameters
+ * Validates pagination parameters using Zod schema
  * @param page - Page number
  * @param limit - Items per page limit
  * @returns ValidationResult with validation status and error message if invalid
  */
 export function validatePagination(page: string, limit: string): ValidationResult {
-  const pageNum = Number(page);
-  const limitNum = Number(limit);
-
-  if (isNaN(pageNum) || pageNum < 1 || !Number.isInteger(pageNum)) {
+  try {
+    paginationSchema.parse({ page, limit });
+    return { isValid: true };
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        isValid: false,
+        message: error.issues[0]?.message || 'Invalid pagination parameters',
+      };
+    }
     return {
       isValid: false,
-      message: 'Page must be a positive integer',
+      message: 'Invalid pagination parameters',
     };
   }
-
-  if (isNaN(limitNum) || limitNum < 1 || limitNum > 1000 || !Number.isInteger(limitNum)) {
-    return {
-      isValid: false,
-      message: 'Limit must be an integer between 1 and 1000',
-    };
-  }
-
-  return { isValid: true };
 }

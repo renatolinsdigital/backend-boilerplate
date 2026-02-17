@@ -26,8 +26,7 @@ To have this project up and running on your machine, check the **[Setup Guide](d
 - ✅ User management (create, retrieve, delete)
 - ✅ Paginated user listing
 - ✅ Password security (bcrypt + complexity validation)
-- ✅ Centralized input validation utilities
-- ✅ Environment variable validation with Zod
+- ✅ Data and Environment variables validation with Zod schemas
 - ✅ Global exception filters
 - ✅ Health check endpoint with database connectivity
 - ✅ Unit testing with Jest
@@ -66,13 +65,12 @@ npm run prisma:migrate  # Run database migrations
 
 ## Documentation
 
-- **[Setup & Getting Started](doc/setup.md)** - Installation and configuration guide
-- **[Technical Implementations](doc/technical_implementations.md)** - Complete list of implemented features
+- **[Setup & Getting Started](doc/setup.md)** - Installation and configuration
 - **[API Documentation](http://localhost:3000/swagger)** - Interactive Swagger UI (run `npm run dev` first)
-- **[Testing](doc/testing.md)** - Unit testing guide and test coverage
-- **[Logging](doc/logging.md)** - Winston logging system with daily rotation
-- **[Security](doc/security.md)** - Authentication, password hashing, CORS, and security practices
-- **[Validation](doc/validation.md)** - Input validation utilities and rules
-- **[Code Quality](doc/code_quality.md)** - Best practices, naming conventions, linting, and git hooks
-- **[System Modules](doc/modules.md)** - Application modules structure
-- **[Extending the Project](doc/extending.md)** - Recommendations for adding features
+- **[Testing](doc/testing.md)** - Unit testing guide
+- **[Logging](doc/logging.md)** - Winston logging with daily rotation
+- **[Security](doc/security.md)** - Authentication, password hashing, CORS
+- **[Validation](doc/zod_validation.md)** - Zod schema validation
+- **[Code Quality](doc/code_quality.md)** - Linting, formatting, git hooks
+- **[Modules](doc/modules.md)** - Application module structure
+- **[Extending](doc/extending.md)** - Adding new features

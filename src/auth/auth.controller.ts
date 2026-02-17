@@ -10,8 +10,9 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ZodError } from 'zod';
 import { AuthService } from './auth.service';
-import { validateEmail, validateRequiredFields } from '../common/validators';
+import { loginSchema } from '../users/users.schemas';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -53,29 +54,21 @@ export class AuthController {
   })
   async login(@Body() body: { email: string; password: string }) {
     try {
-      // Validate required fields
-      const requiredFieldsValidation = validateRequiredFields({
-        email: body.email,
-        password: body.password,
-      });
-      if (!requiredFieldsValidation.isValid) {
-        throw new BadRequestException(requiredFieldsValidation.message);
-      }
-
-      // Trim and validate email format
-      const email = body.email.trim().toLowerCase();
-      const emailValidation = validateEmail(email);
-      if (!emailValidation.isValid) {
-        throw new BadRequestException(emailValidation.message);
-      }
+      // Validate and parse request body using Zod schema
+      const { email, password } = loginSchema.parse(body);
 
       // Attempt to login and get JWT token
-      const result = await this.authService.login(email, body.password);
+      const result = await this.authService.login(email, password);
 
       this.logger.log(`User logged in successfully: ${email}`);
 
       return result;
     } catch (error) {
+      // Handle Zod validation errors
+      if (error instanceof ZodError) {
+        throw new BadRequestException(error.issues[0]?.message || 'Validation failed');
+      }
+
       // Re-throw known exceptions
       if (error instanceof BadRequestException || error instanceof UnauthorizedException) {
         throw error;

@@ -2,109 +2,117 @@
 
 ## Prerequisites
 
-- **Node.js** ≥ 18 and **npm** ≥ 10
-- **PostgreSQL** running locally or accessible from a development machine
+- Node.js ≥ 18
+- npm ≥ 10
+- PostgreSQL
 
 ## Installation
 
-1. **Install dependencies**
+```bash
+# 1. Install dependencies
+npm install
 
-   ```bash
-   npm install
-   npm run prisma:generate
-   npm run prisma:migrate
-   ```
+# 2. Create database
+psql -U postgres
+CREATE DATABASE boilerplate_db;
+\q
 
-2. **Configure database**
+# 3. Configure environment
+cp .env.example .env
+# Edit .env with your database credentials
 
-   **Install PostgreSQL:**
-   - **Windows**: Download from [postgresql.org](https://www.postgresql.org/download/windows/), run installer, note the password you set for the `postgres` user
-   - **macOS**: `brew install postgresql@18` then `brew services start postgresql@18`
-   - **Linux**: `sudo apt-get install postgresql postgresql-contrib` (Debian/Ubuntu) or `sudo dnf install postgresql-server` (Fedora)
+# 4. Run migrations
+npm run prisma:generate
+npm run prisma:migrate
 
-   **Create a database:**
-
-   ```bash
-   psql -U postgres # or psql -U postgres -p <port_number> if you need to inform the port
-   CREATE DATABASE boilerplate_db;
-   \q
-   ```
-
-   **Configure connection:**
-   - Copy `.env.example` to `.env` (after creating the `.env` file)
-   - Update `DATABASE_URL` with your PostgreSQL credentials
-   - Example: `postgresql://postgres:yourpassword@localhost:5432/boilerplate_db?schema=public`
-   - Replace `yourpassword` with the password you set during PostgreSQL installation
-   - Default port is `5432`
-
-   Ps. If you are facing user or password connection problems, try using the entire connection string in the terminal: `psql "host=127.0.0.1 port=5433 user=postgres dbname=postgres"`
-
-3. **Start development server**
-
-   ```bash
-   npm run dev
-   ```
-
-4. **Access the application**
-   - Open `http://localhost:3000` in your browser
-   - The root endpoint will show API information and available endpoints
+# 5. Start server
+npm run dev
+```
 
 ## Environment Variables
 
-Create a `.env` file in the project root with the following variables:
+Create `.env` file:
 
 ```env
-# Database connection
-DATABASE_URL="postgresql://postgres:yourpassword@localhost:5432/boilerplate_db?schema=public"
-
-# JWT configuration
-JWT_SECRET="your-super-secret-jwt-key-change-this-in-production"
+DATABASE_URL="postgresql://postgres:password@localhost:5432/boilerplate_db?schema=public"
+JWT_SECRET="min-32-chars-strong-random-string"
 JWT_EXPIRES_IN="7d"
-
-# Application environment
 NODE_ENV="development"
-
-# CORS configuration
-# Comma-separated list of allowed origins. Use "*" to allow all origins (NOT recommended for production)
 CORS_ORIGINS="http://localhost:3000,http://localhost:3001"
 ```
 
 **Important:**
 
-- Replace `yourpassword` with your PostgreSQL password
-- Change `JWT_SECRET` in production to a strong, random value (at least 32 characters)
-- Update `CORS_ORIGINS` with your frontend application URLs
+- Change `password` to your PostgreSQL password
+- Use strong JWT_SECRET (32+ characters) in production
+- Update CORS_ORIGINS with your frontend URLs
 
-For detailed CORS configuration, see [Security Documentation](security.md#cors-cross-origin-resource-sharing).
+## PostgreSQL Setup
+
+**Windows:** Download from [postgresql.org](https://www.postgresql.org/download/windows/)  
+**macOS:** `brew install postgresql@18 && brew services start postgresql@18`  
+**Linux:** `sudo apt-get install postgresql postgresql-contrib`
+
+Default port: 5432
 
 ## Available Scripts
 
-- `npm run dev` - Start development server with hot reload
-- `npm run build` - Run production build
-- `npm run prisma:generate` - Generate Prisma Client
-- `npm run prisma:migrate` - Run database migrations
+```bash
+npm run dev              # Development server (hot reload)
+npm run build            # Production build
+npm test                 # Run tests
+npm run lint            # Check code quality
+npm run prisma:generate  # Generate Prisma client
+npm run prisma:migrate   # Run migrations
+npm run clean            # Remove build artifacts
+npm run free             # Kill process on port 3000
+```
 
-## Creating Your First User
+## First Steps
 
-Send a POST request to `/users/register`:
+**Create a user:**
 
-```json
+```bash
+POST http://localhost:3000/users/register
 {
-  "email": "jane@example.com",
-  "name": "Jane Doe",
-  "password": "secret"
+  "email": "user@example.com",
+  "password": "Password123",
+  "name": "John Doe"
 }
 ```
 
-## Logging In
+**Login:**
 
-Send a POST request to `/auth/login`:
-
-```json
+```bash
+POST http://localhost:3000/auth/login
 {
-  "email": "jane@example.com",
-  "password": "secret"
+  "email": "user@example.com",
+  "password": "Password123"
 }
 ```
 
-The password will be hashed before being stored in the database, and validated using bcryptjs during login.
+**Access API:**
+
+- Root: `http://localhost:3000`
+- Swagger: `http://localhost:3000/swagger`
+
+## Troubleshooting
+
+**Database connection failed:**
+
+- Verify PostgreSQL is running
+- Check credentials in `DATABASE_URL`
+- Ensure database exists
+
+**Port 3000 already in use:**
+
+```bash
+npm run free
+```
+
+**Prisma errors:**
+
+```bash
+npm run prisma:generate
+npm run prisma:migrate
+```

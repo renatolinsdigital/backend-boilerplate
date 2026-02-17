@@ -1,29 +1,43 @@
 /**
  * Validation utility functions for input validation across controllers
+ * Using Zod for type-safe schema validation
  */
 
+import { ZodError } from 'zod';
 import { ValidationResult } from './models';
+import {
+  emailSchema,
+  passwordSchema,
+  roleSchema,
+  idSchema,
+  createRequiredFieldsSchema,
+} from '../../users/users.schemas';
 
 /**
- * Validates email format
+ * Validates email format using Zod schema
  * @param email - Email address to validate
  * @returns ValidationResult with validation status and error message if invalid
  */
 export function validateEmail(email: string): ValidationResult {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!emailRegex.test(email)) {
+  try {
+    emailSchema.parse(email);
+    return { isValid: true };
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        isValid: false,
+        message: error.issues[0]?.message || 'Invalid email format',
+      };
+    }
     return {
       isValid: false,
       message: 'Invalid email format',
     };
   }
-
-  return { isValid: true };
 }
 
 /**
- * Validates password complexity (medium level)
+ * Validates password complexity (medium level) using Zod schema
  * Requirements:
  * - At least 8 characters
  * - At least one uppercase letter
@@ -34,89 +48,93 @@ export function validateEmail(email: string): ValidationResult {
  * @returns ValidationResult with validation status and error message if invalid
  */
 export function validatePasswordComplexity(password: string): ValidationResult {
-  if (password.length < 8) {
+  try {
+    passwordSchema.parse(password);
+    return { isValid: true };
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        isValid: false,
+        message: error.issues[0]?.message || 'Invalid password format',
+      };
+    }
     return {
       isValid: false,
-      message: 'Password must be at least 8 characters long',
+      message: 'Invalid password format',
     };
   }
-
-  if (!/[A-Z]/.test(password)) {
-    return {
-      isValid: false,
-      message: 'Password must contain at least one uppercase letter',
-    };
-  }
-
-  if (!/[a-z]/.test(password)) {
-    return {
-      isValid: false,
-      message: 'Password must contain at least one lowercase letter',
-    };
-  }
-
-  if (!/[0-9]/.test(password)) {
-    return {
-      isValid: false,
-      message: 'Password must contain at least one number',
-    };
-  }
-
-  return { isValid: true };
 }
 
 /**
- * Validates user role
+ * Validates user role using Zod schema
  * @param role - Role to validate
  * @returns ValidationResult with validation status and error message if invalid
  */
 export function validateRole(role: string): ValidationResult {
-  const validRoles = ['ADMIN', 'STUDENT', 'TEACHER', 'STAFF', 'GUEST'];
-
-  if (!validRoles.includes(role.toUpperCase())) {
+  try {
+    roleSchema.parse(role.toUpperCase());
+    return { isValid: true };
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        isValid: false,
+        message:
+          error.issues[0]?.message ||
+          'Invalid role. Must be one of: ADMIN, STUDENT, TEACHER, STAFF, GUEST',
+      };
+    }
     return {
       isValid: false,
-      message: `Invalid role. Must be one of: ${validRoles.join(', ')}`,
+      message: 'Invalid role. Must be one of: ADMIN, STUDENT, TEACHER, STAFF, GUEST',
     };
   }
-
-  return { isValid: true };
 }
 
 /**
- * Validates numeric ID format
+ * Validates numeric ID format using Zod schema
  * @param id - ID string to validate
  * @returns ValidationResult with validation status and error message if invalid
  */
 export function validateId(id: string): ValidationResult {
-  const numericId = Number(id);
-
-  if (isNaN(numericId) || numericId < 1) {
+  try {
+    idSchema.parse(id);
+    return { isValid: true };
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        isValid: false,
+        message: error.issues[0]?.message || 'Invalid user ID format',
+      };
+    }
     return {
       isValid: false,
       message: 'Invalid user ID format',
     };
   }
-
-  return { isValid: true };
 }
 
 /**
- * Validates required fields
+ * Validates required fields using Zod schema
  * @param fields - Object containing field names and their values
  * @returns ValidationResult with validation status and error message if invalid
  */
 export function validateRequiredFields(fields: Record<string, unknown>): ValidationResult {
-  const missingFields = Object.entries(fields)
-    .filter(([, value]) => !value)
-    .map(([key]) => key);
-
-  if (missingFields.length > 0) {
+  try {
+    const schema = createRequiredFieldsSchema(fields);
+    schema.parse(fields);
+    return { isValid: true };
+  } catch (error) {
+    if (error instanceof ZodError) {
+      const missingField = error.issues[0]?.path?.[0];
+      const message = error.issues[0]?.message;
+      return {
+        isValid: false,
+        message: message || `${String(missingField)} is required`,
+      };
+    }
     return {
       isValid: false,
-      message: `${missingFields.join(' and ')} ${missingFields.length === 1 ? 'is' : 'are'} required`,
+      message: 'Required field validation failed',
     };
   }
-
-  return { isValid: true };
 }

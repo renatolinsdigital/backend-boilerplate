@@ -1,81 +1,72 @@
 # Extending the Project
 
-Recommendations for future enhancements.
+Recommendations for adding new features.
 
----
+## Role-Based Access Control
 
-## Enhancement Recommendations
+Create `RolesGuard` to enforce permissions:
 
-### Role-Based Access Control (RBAC)
+- Use decorators to restrict routes by role
+- Implement custom permission system
+- Example: `@Roles('ADMIN')` decorator on endpoints
 
-- Create RolesGuard to enforce role-based permissions on endpoints
-- Use decorators to restrict routes by role (ADMIN, TEACHER, STUDENT, etc.)
-- Implement custom permission system for fine-grained access control
+## Data Transfer Objects (DTOs)
 
-### Data Transfer Objects (DTOs)
+Consider using NestJS ValidationPipe with class-validator:
 
 - Install `class-validator` and `class-transformer`
-- Create DTOs for all request/response types
-- Enable global validation pipes for automatic input validation
-- Use decorators like `@IsEmail()`, `@IsString()`, `@MinLength()` for validation rules
+- Create DTO classes with validation decorators
+- Enable global validation pipe
+- Alternative: Continue using Zod schemas (currently implemented)
 
-### Performance & Scalability
+## Performance
 
-**Caching**:
+**Caching:**
 
-- Implement Redis or in-memory caching with `@nestjs/cache-manager`
-- Cache frequently accessed data (user profiles, course lists)
-- Set appropriate TTL values for cache invalidation
+- Redis with `@nestjs/cache-manager`
+- Cache frequently accessed data
+- Set appropriate TTL values
 
-**Rate Limiting**:
+**Rate Limiting:**
 
-- Use `@nestjs/throttler` to prevent API abuse
-- Configure per-route or global rate limits
-- Protect authentication endpoints from brute force attacks
+- `@nestjs/throttler` for API rate limiting
+- Protect auth endpoints from brute force
+- Configure per-route limits
 
-**Database Optimization**:
+**Database:**
 
-- Add indexes on frequently queried fields (email, role)
-- Use Prisma select to fetch only needed fields
+- Add indexes on frequently queried fields
+- Use Prisma select for specific fields only
 - Implement cursor-based pagination for large datasets
-- Configure database connection pooling
+- Optimize connection pooling
 
-### Monitoring & Observability
+## Monitoring
 
-**Error Tracking**:
+**Error Tracking:**
 
-- Integrate Sentry for production error tracking
-- Set up alerts for critical errors
-- Track error rates and patterns
+- Integrate Sentry for production errors
+- Set up error rate alerts
 
-**Metrics & Health Checks**:
+**Metrics:**
 
-- Use `@nestjs/terminus` to expand health checks
-- Add Prometheus metrics for performance monitoring
-- Monitor database connectivity, memory, and disk usage
-- Track API response times and request rates
+- `@nestjs/terminus` for health checks
+- Prometheus metrics
+- Track response times and request rates
 
----
+## Development Guidelines
 
-## Contributing Guidelines
+When adding features:
 
-When extending this project:
-
-1. **Follow NestJS conventions** - Use modules, services, controllers pattern
-2. **Add tests** - Write unit and integration tests for new features
-3. **Update documentation** - Keep docs current and add Swagger decorators
-4. **Use TypeScript strictly** - Leverage type safety throughout
-5. **Validate inputs** - Use DTOs or validators for all user inputs
-6. **Handle errors** - Use custom exceptions and global error filters
-7. **Secure endpoints** - Protect routes with AuthGuard and role checks
-
----
+- Follow NestJS module pattern
+- Add tests for new code
+- Update Swagger documentation
+- Use TypeScript strictly
+- Validate all inputs (Zod or DTOs)
+- Handle errors with custom exceptions
+- Protect routes with guards
 
 ## Resources
 
-- [NestJS Documentation](https://docs.nestjs.com/)
-- [Prisma Documentation](https://www.prisma.io/docs)
+- [NestJS Docs](https://docs.nestjs.com/)
+- [Prisma Docs](https://www.prisma.io/docs)
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- [Project Setup Guide](setup.md)
-- [Security Documentation](security.md)
-- [Code Quality Guide](code_quality.md)

@@ -20,17 +20,11 @@ import {
   ApiQuery,
   ApiBearerAuth,
 } from '@nestjs/swagger';
+import { ZodError } from 'zod';
 import { UsersService } from './users.service';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { UserNotFoundException } from '../common/errors/user-not-found.exception';
-import {
-  validateEmail,
-  validatePasswordComplexity,
-  validateRole,
-  validateId,
-  validatePagination,
-  validateRequiredFields,
-} from '../common/validators';
+import { userRegistrationSchema, idSchema, paginationSchema } from './users.schemas';
 
 @ApiTags('Users')
 @Controller('users')
@@ -74,43 +68,18 @@ export class UsersController {
     },
   ) {
     try {
-      // Validate required fields
-      const requiredFieldsValidation = validateRequiredFields({
-        email: body.email,
-        password: body.password,
-      });
-      if (!requiredFieldsValidation.isValid) {
-        throw new BadRequestException(requiredFieldsValidation.message);
-      }
+      // Validate and parse request body using Zod schema
+      const validatedData = userRegistrationSchema.parse(body);
 
-      // Normalize and validate email format
-      const email = body.email.trim().toLowerCase();
-      const emailValidation = validateEmail(email);
-      if (!emailValidation.isValid) {
-        throw new BadRequestException(emailValidation.message);
-      }
-
-      // Validate password complexity (medium level)
-      const passwordValidation = validatePasswordComplexity(body.password);
-      if (!passwordValidation.isValid) {
-        throw new BadRequestException(passwordValidation.message);
-      }
-
-      // Validate role if provided
-      if (body.role) {
-        const roleValidation = validateRole(body.role);
-        if (!roleValidation.isValid) {
-          throw new BadRequestException(roleValidation.message);
-        }
-      }
-
-      const result = await this.usersService.create({
-        ...body,
-        email, // Use normalized email
-      });
+      const result = await this.usersService.create(validatedData);
       const { password: _password, ...userWithoutPassword } = result;
       return userWithoutPassword;
     } catch (error) {
+      // Handle Zod validation errors
+      if (error instanceof ZodError) {
+        throw new BadRequestException(error.issues[0]?.message || 'Validation failed');
+      }
+
       // Handle duplicate email error
       if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
         throw new BadRequestException('Email already in use');
@@ -159,17 +128,16 @@ export class UsersController {
   })
   async findbyPage(@Query('page') page: string = '1', @Query('limit') limit: string = '10') {
     try {
-      // Validate pagination parameters
-      const paginationValidation = validatePagination(page, limit);
-      if (!paginationValidation.isValid) {
-        throw new BadRequestException(paginationValidation.message);
-      }
-
-      const pageNum = Number(page);
-      const limitNum = Number(limit);
+      // Validate pagination parameters using Zod schema
+      const { page: pageNum, limit: limitNum } = paginationSchema.parse({ page, limit });
 
       return await this.usersService.findbyPage(pageNum, limitNum);
     } catch (error) {
+      // Handle Zod validation errors
+      if (error instanceof ZodError) {
+        throw new BadRequestException(error.issues[0]?.message || 'Invalid pagination parameters');
+      }
+
       // Re-throw known exceptions
       if (error instanceof BadRequestException) {
         throw error;
@@ -197,13 +165,8 @@ export class UsersController {
   @ApiResponse({ status: 400, description: 'Bad request - invalid ID format' })
   async findOne(@Param('id') id: string) {
     try {
-      // Validate ID parameter
-      const idValidation = validateId(id);
-      if (!idValidation.isValid) {
-        throw new BadRequestException(idValidation.message);
-      }
-
-      const userId = Number(id);
+      // Validate ID parameter using Zod schema
+      const userId = idSchema.parse(id);
 
       const user = await this.usersService.findOneById(userId);
 
@@ -214,6 +177,11 @@ export class UsersController {
       const { password: _password, ...result } = user;
       return result;
     } catch (error) {
+      // Handle Zod validation errors
+      if (error instanceof ZodError) {
+        throw new BadRequestException(error.issues[0]?.message || 'Invalid user ID');
+      }
+
       // Re-throw known exceptions
       if (error instanceof UserNotFoundException || error instanceof BadRequestException) {
         throw error;
@@ -238,13 +206,8 @@ export class UsersController {
   @ApiResponse({ status: 400, description: 'Bad request - invalid ID format' })
   async delete(@Param('id') id: string) {
     try {
-      // Validate ID parameter
-      const idValidation = validateId(id);
-      if (!idValidation.isValid) {
-        throw new BadRequestException(idValidation.message);
-      }
-
-      const userId = Number(id);
+      // Validate ID parameter using Zod schema
+      const userId = idSchema.parse(id);
 
       // Check if user exists
       const user = await this.usersService.findOneById(userId);
@@ -255,6 +218,11 @@ export class UsersController {
       await this.usersService.delete(userId);
       return { message: 'User deleted successfully' };
     } catch (error) {
+      // Handle Zod validation errors
+      if (error instanceof ZodError) {
+        throw new BadRequestException(error.issues[0]?.message || 'Invalid user ID');
+      }
+
       // Re-throw known exceptions
       if (error instanceof UserNotFoundException || error instanceof BadRequestException) {
         throw error;
